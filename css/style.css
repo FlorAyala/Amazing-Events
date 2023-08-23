@@ -1,0 +1,7 @@
+.carousel-inner, .carousel-item{
+    height: 400px;
+}
+
+.card{
+    max-width: 540px;
+}
