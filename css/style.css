@@ -1,7 +1,21 @@
 .carousel-inner, .carousel-item{
-    height: 400px;
+    height: 350px;
 }
 
 .card{
     max-width: 540px;
+}
+footer img{
+    width: 120px;
+    height: 50px;
+}
+header img{
+    width: 154px;
+    height: 56px;
+}
+#mainDetails{
+    height: 65vh;
+}
+#styleCards{
+    width: 18rem;
 }
