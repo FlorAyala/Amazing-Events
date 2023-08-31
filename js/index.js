@@ -1,4 +1,4 @@
-console.log(data);
+console.log(data)
 const $div = document.querySelector('#eventos')
 
 console.log($div); 
