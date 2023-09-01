@@ -1,12 +1,7 @@
 let  template  = ""
 let pastEvents = []
 const currentDate = data.currentDate
-
-
 const $div = document.querySelector('#eventos')
-
-
-
 
 function filtroFecha(date){
     for(let evento of data.events){
@@ -36,3 +31,20 @@ for ( let evento of pastEvents){
 
 console.log( template )
 $div.innerHTML =  template
+
+
+
+//CHECKBOX
+
+let template2 = ''
+for(let category of pastEvents) {
+    template2 += `  <div class="form-check form-check-inline">
+    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+    <label class="form-check-label" for="inlineCheckbox1">${category.category}</label>
+</div>
+    `
+}
+console.log(template2)
+const $checbox = document.getElementById('checkbox')
+$checbox.innerHTML = template2;
+
