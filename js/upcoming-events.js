@@ -1,58 +1,117 @@
-// console.log(data);
-
-let  template  = ''
-let pastEvents = []
+let  template  = ""
+let upCommingEvents = []
 const currentDate = data.currentDate
-
-
-const $div = document.querySelector('#eventos')
-
-// console.log($div);
-
+const $contenedorCards = document.querySelector('#eventos')
+const $contenedorChecks = document.getElementById('checks')
 
 function filtroFecha(date){
     for(let evento of data.events){
         if (date <= evento.date){
-            pastEvents.push(evento)
+            upCommingEvents.push(evento)
         }
     }
 
 }
 filtroFecha(currentDate)
-console.log(pastEvents)
-
-for ( let evento of pastEvents){
-   
-    template  += ` <div>
-    <div class="card " id="styleCards">
-        <img src="${evento.image}" class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">${evento.name}</h5>
-            <p class="card-text">${evento.description}</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-    </div>`
-    
-
-}
-
-console.log( template )
-$div.innerHTML =  template
+console.log(upCommingEvents)
 
 
 
-//CHECKBOX
 
+const catgoriaSinRepeticion = [...new Set(data.events.map(objeto => objeto.category)) ]
 
-let template2 = ''
-for(let category of pastEvents) {
-    template2 += `  <div class="form-check form-check-inline">
-    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-    <label class="form-check-label" for="inlineCheckbox1">${category.category}</label>
+function estructuraChecks(categoria){
+  let template =''
+  template =`
+  <div class="form-check form-check-inline">
+  <label class="form-check-label" for="inlineCheckbox1">
+  <input class="form-check-input" type="checkbox" id="${categoria}" value="${categoria}">${categoria}</label>
 </div>
-    `
+  `
+  return template
 }
-console.log(template2)
-const $checbox = document.getElementById('checkbox')
-$checbox.innerHTML = template2;
+
+
+function imprimirChecksEnHTML (array, elementoHTML){
+  let estructura = ""
+  array.forEach( categoria => {
+       estructura += estructuraChecks(categoria)
+  } )
+  elementoHTML.innerHTML = estructura
+}
+imprimirChecksEnHTML(catgoriaSinRepeticion, $contenedorChecks)
+
+$contenedorChecks.addEventListener("change", (e) => {
+  
+  const returnFnCruzado = fnCruzado(upCommingEvents, $search)
+  console.log(returnFnCruzado )
+  imprimirCardsEnHTML(returnFnCruzado, $contenedorCards)
+})
+
+function crearEstructuraCard (evento){
+  let  template  = ''
+  
+      template  += ` <div>
+      <div class="card " id="styleCards">
+          <img src="${evento.image}" class="card-img-top" alt="...">
+          <div class="card-body">
+              <h5 class="card-title">${evento.name}</h5>
+              <p class="card-text">${evento.description}</p>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+      </div>
+      </div>`
+  
+  
+  return template
+}
+
+function imprimirCardsEnHTML (arrayEvents, elementoHTML){
+  let estructura = ""
+  arrayEvents.forEach( objeto => {
+       estructura += crearEstructuraCard(objeto)
+  } )
+  elementoHTML.innerHTML = estructura
+}
+imprimirCardsEnHTML(upCommingEvents, $contenedorCards)
+
+
+const $search = document.querySelector('input[type="search"]')
+$search.addEventListener("keyup", () =>{
+  
+ const returnFnCruzado = fnCruzado(upCommingEvents, $search)
+  imprimirCardsEnHTML(returnFnCruzado, $contenedorCards)
+
+})
+
+function filtroSearch(array, input){
+  let filtradosSearch = array.filter(objeto => objeto.name.includes(input.value))
+ 
+  return filtradosSearch
+}
+
+
+function filtroCheck(array){
+  let arrayValues = Array.from(document.querySelectorAll("input[type='checkbox']:checked")).map( check => check.value)
+  
+  if(arrayValues.length > 0){
+    let objetosFiltradosPorCheck = array.filter(objeto => arrayValues.includes(objeto.category))
+    
+    return objetosFiltradosPorCheck
+  }
+  else{
+    
+    return upCommingEvents
+  }
+
+}
+
+function fnCruzado(array, input){
+  const  arrayFiltradoPorChecks = filtroCheck(array)
+  const arrayFiltradoPorSearchs = filtroSearch(arrayFiltradoPorChecks, input)
+  return arrayFiltradoPorSearchs
+ 
+}
+
+
+
