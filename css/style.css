@@ -13,9 +13,18 @@ header img{
     width: 154px;
     height: 56px;
 }
-#mainDetails{
-    height: 65vh;
-}
+
 #styleCards{
     width: 18rem;
 }
+
+#fondo-nav{
+    background-color: rgb(250, 226, 230);
+}
+
+/* @media screen and (max-width :430px){
+    #mainDetails{
+        width: 70%
+        height: 26px;
+    }
+} */

@@ -18,7 +18,7 @@ console.log($contenedorDetails)
 
 function estructuraDetails(evento) {
     let template = ''
-    template = `<div class="card mb-3" style="max-width: 85%;">
+    template = `<div class="card mb-3 p-3 " style="max-width: 85%; align-items-center">
     <div class="row g-0">
       <div class="col-md-4">
         <img src="${evento.image}"  class="img-fluid rounded-start max-width: 100% img-thumbnail" alt="...">
