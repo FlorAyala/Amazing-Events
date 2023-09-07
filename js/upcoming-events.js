@@ -57,7 +57,7 @@ function crearEstructuraCard (evento){
           <div class="card-body">
               <h5 class="card-title">${evento.name}</h5>
               <p class="card-text">${evento.description}</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
+              <a href="./details.html?id=${evento._id}" class="btn btn-primary">More details</a>
           </div>
       </div>
       </div>`
