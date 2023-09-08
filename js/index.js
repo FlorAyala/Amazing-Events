@@ -1,3 +1,16 @@
+fetch("https://mindhub-xj03.onrender.com/api/amazing")
+
+.then( (response) => response.json()) 
+ .then( data => {
+      let events = data.events
+      console.log(events);
+
+     crearEstructuraCard (events)
+
+ })
+.catch()
+
+
 const $contenedorChecks = document.getElementById('checks')
 const $contenedorCards = document.getElementById('eventos')
 const $contenedorAlert = document.getElementById('alert')
