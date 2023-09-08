@@ -82,9 +82,6 @@ function filtroCheck(array){
     let objetosFiltradosPorCheck = array.filter(objeto => arrayValues.includes(objeto.category))
     console.log(objetosFiltradosPorCheck)
     return objetosFiltradosPorCheck
-  }else if(arrayValues.length != 0){
-    imprimirAlert($contenedorAlert)
-
   }
   else{
     console.log(data.events)
