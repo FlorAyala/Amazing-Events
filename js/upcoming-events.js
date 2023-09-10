@@ -1,22 +1,40 @@
+let URLApi = "https://mindhub-xj03.onrender.com/api/amazing"
+fetch(URLApi)
+  .then((response) => response.json())
+  .then(data => {
+    let events = data.events
+    let upCommingEvents = events.filter(objeto => data.currentDate < objeto.date)
+
+    const catgoriaSinRepeticion = [...new Set(upCommingEvents.map(objeto => objeto.category)) ]
+
+    imprimirChecksEnHTML(catgoriaSinRepeticion, $contenedorChecks)
+    imprimirCardsEnHTML(upCommingEvents, $contenedorCards)
+
+    $contenedorChecks.addEventListener("change", (e) => {
+  
+      const returnFnCruzado = fnCruzado(upCommingEvents, $search)
+      console.log(returnFnCruzado )
+      imprimirCardsEnHTML(returnFnCruzado, $contenedorCards)
+    })
+
+    $search.addEventListener("keyup", () =>{
+  
+      const returnFnCruzado = fnCruzado(upCommingEvents, $search)
+       imprimirCardsEnHTML(returnFnCruzado, $contenedorCards)
+     
+     })
+
+  })
+  .catch(error => {
+    console.log('error')
+  })
+
+
+
 let  template  = ""
-let upCommingEvents = []
-const currentDate = data.currentDate
+
 const $contenedorCards = document.querySelector('#eventos')
 const $contenedorChecks = document.getElementById('checks')
-
-function filtroFecha(date){
-    for(let evento of data.events){
-        if (date <= evento.date){
-            upCommingEvents.push(evento)
-        }
-    }
-
-}
-filtroFecha(currentDate)
-console.log(upCommingEvents)
-
-
-
 
 const catgoriaSinRepeticion = [...new Set(data.events.map(objeto => objeto.category)) ]
 
@@ -39,7 +57,6 @@ function imprimirChecksEnHTML (array, elementoHTML){
   } )
   elementoHTML.innerHTML = estructura
 }
-imprimirChecksEnHTML(catgoriaSinRepeticion, $contenedorChecks)
 
 $contenedorChecks.addEventListener("change", (e) => {
   
@@ -73,16 +90,11 @@ function imprimirCardsEnHTML (arrayEvents, elementoHTML){
   } )
   elementoHTML.innerHTML = estructura
 }
-imprimirCardsEnHTML(upCommingEvents, $contenedorCards)
+
 
 
 const $search = document.querySelector('input[type="search"]')
-$search.addEventListener("keyup", () =>{
-  
- const returnFnCruzado = fnCruzado(upCommingEvents, $search)
-  imprimirCardsEnHTML(returnFnCruzado, $contenedorCards)
 
-})
 
 function filtroSearch(array, input){
   let filtradosSearch = array.filter(objeto => objeto.name.includes(input.value))

@@ -1,25 +1,45 @@
-fetch("https://mindhub-xj03.onrender.com/api/amazing")
+let URLApi = "https://mindhub-xj03.onrender.com/api/amazing"
+fetch(URLApi)
+  .then((response) => response.json())
+  .then(data => {
+    let events = data.events
 
-.then( (response) => response.json()) 
- .then( data => {
-      let events = data.events
-      console.log(events);
+    const catgoriaSinRepeticion = [...new Set(data.events.map(objeto => objeto.category))]
+    
+    imprimirChecksEnHTML(catgoriaSinRepeticion, $contenedorChecks)
+    imprimirCardsEnHTML(events, $contenedorCards)
+    
+    $search.addEventListener("keyup", () => {
 
-     crearEstructuraCard (events)
+      const returnFnCruzado = fnCruzado(data.events, $search)
+      imprimirCardsEnHTML(returnFnCruzado, $contenedorCards)
 
- })
-.catch()
+    })
+    $contenedorChecks.addEventListener("change", (e) => {
+      console.log('funciona')
+      const returnFnCruzado = fnCruzado(data.events, $search)
+      console.log(returnFnCruzado )
+      imprimirCardsEnHTML(returnFnCruzado, $contenedorCards)
+    })
+
+ 
+    
+  })
+  .catch(error => {
+    console.log('error')
+  })
+
 
 
 const $contenedorChecks = document.getElementById('checks')
 const $contenedorCards = document.getElementById('eventos')
-const $contenedorAlert = document.getElementById('alert')
+const $search = document.querySelector('input[type="search"]')
 
-const catgoriaSinRepeticion = [...new Set(data.events.map(objeto => objeto.category)) ]
 
-function estructuraChecks(categoria){
-  let template =''
-  template =`
+
+function estructuraChecks(categoria) {
+  let template = ''
+  template = `
   <div class="form-check form-check-inline">
   <label class="form-check-label" for="inlineCheckbox1">
   <input class="form-check-input" type="checkbox" id="${categoria}" value="${categoria}">${categoria}</label>
@@ -29,26 +49,21 @@ function estructuraChecks(categoria){
 }
 
 
-function imprimirChecksEnHTML (array, elementoHTML){
+function imprimirChecksEnHTML(array, elementoHTML) {
   let estructura = ""
-  array.forEach( categoria => {
-       estructura += estructuraChecks(categoria)
-  } )
+  array.forEach(categoria => {
+    estructura += estructuraChecks(categoria)
+  })
   elementoHTML.innerHTML = estructura
 }
-imprimirChecksEnHTML(catgoriaSinRepeticion, $contenedorChecks)
 
-$contenedorChecks.addEventListener("change", (e) => {
-  console.log('funciona')
-  const returnFnCruzado = fnCruzado(data.events, $search)
-  console.log(returnFnCruzado )
-  imprimirCardsEnHTML(returnFnCruzado, $contenedorCards)
-})
 
-function crearEstructuraCard (evento){
-  let  template  = ''
-  
-      template  += ` <div>
+
+
+function crearEstructuraCard(evento) {
+  let template = ''
+
+  template += ` <div>
       <div class="card " id="styleCards">
           <img src="${evento.image}" class="card-img-top" alt="...">
           <div class="card-body">
@@ -58,59 +73,50 @@ function crearEstructuraCard (evento){
           </div>
       </div>
       </div>`
-  
-  
+
+
   return template
 }
 
-function imprimirCardsEnHTML (arrayEvents, elementoHTML){
+function imprimirCardsEnHTML(arrayEvents, elementoHTML) {
   let estructura = ""
-  arrayEvents.forEach( objeto => {
-       estructura += crearEstructuraCard(objeto)
-  } )
+  arrayEvents.forEach(objeto => {
+    estructura += crearEstructuraCard(objeto)
+  })
   elementoHTML.innerHTML = estructura
 }
-imprimirCardsEnHTML(data.events, $contenedorCards)
 
 
-const $search = document.querySelector('input[type="search"]')
-$search.addEventListener("keyup", () =>{
-  
- const returnFnCruzado = fnCruzado(data.events, $search)
-  imprimirCardsEnHTML(returnFnCruzado, $contenedorCards)
 
-})
 
-function filtroSearch(array, input){
+
+function filtroSearch(array, input) {
   let filtradosSearch = array.filter(objeto => objeto.name.includes(input.value))
   console.log(filtradosSearch)
   return filtradosSearch
 }
 
 
-function filtroCheck(array){
-  let arrayValues = Array.from(document.querySelectorAll("input[type='checkbox']:checked")).map( check => check.value)
+function filtroCheck(array) {
+  let arrayValues = Array.from(document.querySelectorAll("input[type='checkbox']:checked")).map(check => check.value)
   console.log(arrayValues)
-  if(arrayValues.length > 0){
+  if (arrayValues.length > 0) {
     let objetosFiltradosPorCheck = array.filter(objeto => arrayValues.includes(objeto.category))
     console.log(objetosFiltradosPorCheck)
     return objetosFiltradosPorCheck
-  }else if(arrayValues.length != 0){
-    imprimirAlert($contenedorAlert)
-
   }
-  else{
+  else {
     console.log(data.events)
     return data.events
   }
 
 }
 
-function fnCruzado(array, input){
-  const  arrayFiltradoPorChecks = filtroCheck(array)
+function fnCruzado(array, input) {
+  const arrayFiltradoPorChecks = filtroCheck(array)
   const arrayFiltradoPorSearchs = filtroSearch(arrayFiltradoPorChecks, input)
   return arrayFiltradoPorSearchs
- 
+
 }
 
 
