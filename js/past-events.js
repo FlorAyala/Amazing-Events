@@ -3,9 +3,8 @@ fetch(URLApi)
   .then((response) => response.json())
   .then(data => {
     let events = data.events
-
-
-    let pastEvents = events.filter(objeto => data.currentDate > objeto.date)
+    const pastEvents = events.filter(objeto => data.currentDate > objeto.date)
+    
 
     const catgoriaSinRepeticion = [...new Set(pastEvents.map(objeto => objeto.category))]
 
@@ -36,7 +35,6 @@ fetch(URLApi)
   })
 
 
-let template = ""
 
 
 const $contenedorCards = document.querySelector('#eventos')
@@ -74,7 +72,7 @@ function crearEstructuraCard(evento) {
           <div class="card-body">
               <h5 class="card-title">${evento.name}</h5>
               <p class="card-text">${evento.description}</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
+              <a href="./details.html?id=${evento._id}" class="btn btn-primary">More details</a>
           </div>
       </div>
       </div>`
