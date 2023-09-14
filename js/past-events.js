@@ -8,8 +8,8 @@ fetch(URLApi)
 
     const catgoriaSinRepeticion = [...new Set(pastEvents.map(objeto => objeto.category))]
 
-    imprimirChecksEnHTML(catgoriaSinRepeticion, $contenedorChecks)
-    imprimirCardsEnHTML(pastEvents, $contenedorCards)
+    
+    
 
     $search.addEventListener("keyup", () => {
 
@@ -17,6 +17,7 @@ fetch(URLApi)
       imprimirCardsEnHTML(returnFnCruzado, $contenedorCards)
 
     })
+    imprimirChecksEnHTML(catgoriaSinRepeticion, $contenedorChecks)
 
     $contenedorChecks.addEventListener("change", (e) => {
 
@@ -24,10 +25,28 @@ fetch(URLApi)
       console.log(returnFnCruzado)
       imprimirCardsEnHTML(returnFnCruzado, $contenedorCards)
     })
+    imprimirCardsEnHTML(pastEvents, $contenedorCards)
 
-
-
-
+    function filtroCheck(array) {
+      let arrayValues = Array.from(document.querySelectorAll("input[type='checkbox']:checked")).map(check => check.value)
+    
+      if (arrayValues.length > 0) {
+        let objetosFiltradosPorCheck = array.filter(objeto => arrayValues.includes(objeto.category))
+    
+        return objetosFiltradosPorCheck
+      }
+      else {
+    
+        return pastEvents
+      }
+    
+    }
+    function fnCruzado(array, input) {
+      const arrayFiltradoPorChecks = filtroCheck(array)
+      const arrayFiltradoPorSearchs = filtroSearch(arrayFiltradoPorChecks, input)
+      return arrayFiltradoPorSearchs
+    
+    }
   }
   )
   .catch(error => {
@@ -100,27 +119,9 @@ function filtroSearch(array, input) {
 }
 
 
-function filtroCheck(array) {
-  let arrayValues = Array.from(document.querySelectorAll("input[type='checkbox']:checked")).map(check => check.value)
 
-  if (arrayValues.length > 0) {
-    let objetosFiltradosPorCheck = array.filter(objeto => arrayValues.includes(objeto.category))
 
-    return objetosFiltradosPorCheck
-  }
-  else {
 
-    return pastEvents
-  }
-
-}
-
-function fnCruzado(array, input) {
-  const arrayFiltradoPorChecks = filtroCheck(array)
-  const arrayFiltradoPorSearchs = filtroSearch(arrayFiltradoPorChecks, input)
-  return arrayFiltradoPorSearchs
-
-}
 
 
 

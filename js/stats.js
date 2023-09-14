@@ -12,23 +12,24 @@ fetch(URLApi)
     let events = data.events;
 
     const pastEvents = events.filter((objeto) => datos.currentDate > objeto.date);
-
     const upcomingEvents = events.filter((objeto) => datos.currentDate < objeto.date);
     const catgoriaSinRepeticion = [...new Set(pastEvents.map(objeto => objeto.category))]
 
-
+    //  estructura Tabla 1
     let mayor = mayorAsistencia(events);
     let menor = menorAsistencia(events);
     let capacidad = capacidadTabla1(events);
-    //  estructura Tabla 1
+
     estructuraTabla1(mayor, menor, capacidad, $contenedorTabla1);
+
+
 
     //  estructura Tabla 3
     let arrysCategorias = catgoriaSinRepeticion.map(categoria => pastEvents.filter(event => event.category == categoria))
 
-    let arrysCategoriasUpcomming = catgoriaSinRepeticion.map(categoria => upcomingEvents.filter(event => event.category == categoria)).filter((elemento)=>elemento.length)
+    let arrysCategoriasUpcomming = catgoriaSinRepeticion.map(categoria => upcomingEvents.filter(event => event.category == categoria)).filter((elemento) => elemento.length)
 
-    console.log(arrysCategorias)
+
 
     function recorrerCategoria() {
 
@@ -48,19 +49,15 @@ fetch(URLApi)
           }
           return acumulador
         }, {})
-        
+
         aux.push(resultadoCategoriasReducida)
       }
       return aux
     }
-    
-
     let resultadoTablaPastEvent = recorrerCategoria()
-
-    
-
-
     estructuraTabla(resultadoTablaPastEvent, $contenedorTabla3)
+
+
 
     // tabla 2
 
@@ -82,13 +79,12 @@ fetch(URLApi)
           }
           return acumulador
         }, {})
-        
+
         aux.push(resultadoCategoriasReducida)
       }
       return aux
     }
     let resultadoTablaUpcomming = recorrerCategoria2()
-    console.log(resultadoTablaUpcomming)
     estructuraTabla(resultadoTablaUpcomming, $contenedorTabla2)
 
 
@@ -114,7 +110,7 @@ function capacidadTabla1(array) {
   return capacidad;
 }
 
-function estructuraTabla1( numeroMayor, numeroMenor, capacidad,  elementoHTML) {
+function estructuraTabla1(numeroMayor, numeroMenor, capacidad, elementoHTML) {
   let template = `
   <tr>
   <td>${numeroMayor.name} ${((numeroMayor.assistance * 100) / numeroMayor.capacity).toFixed(2)}%</td>
@@ -130,8 +126,6 @@ function estructuraTabla1( numeroMayor, numeroMenor, capacidad,  elementoHTML) {
 function estructuraTabla(array, elemento) {
   let estructura = ''
   array.forEach(categoria => {
-    console.log(categoria)
-    
     let template = `
     <tr>
     <td>${categoria.cat}</td>
