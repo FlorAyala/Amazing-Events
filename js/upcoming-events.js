@@ -23,6 +23,27 @@ fetch(URLApi)
       imprimirCardsEnHTML(returnFnCruzado, $contenedorCards)
 
     })
+    function filtroCheck(array) {
+      let arrayValues = Array.from(document.querySelectorAll("input[type='checkbox']:checked")).map(check => check.value)
+    
+      if (arrayValues.length > 0) {
+        let objetosFiltradosPorCheck = array.filter(objeto => arrayValues.includes(objeto.category))
+    
+        return objetosFiltradosPorCheck
+      }
+      else {
+    
+        return upCommingEvents
+      }
+    
+    }
+    
+    function fnCruzado(array, input) {
+      const arrayFiltradoPorChecks = filtroCheck(array)
+      const arrayFiltradoPorSearchs = filtroSearch(arrayFiltradoPorChecks, input)
+      return arrayFiltradoPorSearchs
+    
+    }
 
   })
   .catch(error => {
@@ -102,27 +123,7 @@ function filtroSearch(array, input) {
 }
 
 
-function filtroCheck(array) {
-  let arrayValues = Array.from(document.querySelectorAll("input[type='checkbox']:checked")).map(check => check.value)
 
-  if (arrayValues.length > 0) {
-    let objetosFiltradosPorCheck = array.filter(objeto => arrayValues.includes(objeto.category))
-
-    return objetosFiltradosPorCheck
-  }
-  else {
-
-    return upCommingEvents
-  }
-
-}
-
-function fnCruzado(array, input) {
-  const arrayFiltradoPorChecks = filtroCheck(array)
-  const arrayFiltradoPorSearchs = filtroSearch(arrayFiltradoPorChecks, input)
-  return arrayFiltradoPorSearchs
-
-}
 
 
 
