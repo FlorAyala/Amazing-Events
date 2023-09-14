@@ -1,3 +1,7 @@
+const $contenedorChecks = document.getElementById('checks')
+const $contenedorCards = document.getElementById('eventos')
+const $search = document.querySelector('input[type="search"]')
+
 let URLApi = "https://mindhub-xj03.onrender.com/api/amazing"
 fetch(URLApi)
   .then((response) => response.json())
@@ -15,6 +19,7 @@ fetch(URLApi)
       imprimirCardsEnHTML(returnFnCruzado, $contenedorCards)
 
     })
+    
     $contenedorChecks.addEventListener("change", (e) => {
       console.log('funciona')
       const returnFnCruzado = fnCruzado(data.events, $search)
@@ -31,9 +36,7 @@ fetch(URLApi)
 
 
 
-const $contenedorChecks = document.getElementById('checks')
-const $contenedorCards = document.getElementById('eventos')
-const $search = document.querySelector('input[type="search"]')
+
 
 
 

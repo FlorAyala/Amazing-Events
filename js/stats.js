@@ -1,124 +1,154 @@
-let URLApi = "https://mindhub-xj03.onrender.com/api/amazing"
+let URLApi = "https://mindhub-xj03.onrender.com/api/amazing";
+
+const $contenedorTabla1 = document.getElementById("tabla1");
+const $contenedorTabla2 = document.getElementById("tabla2");
+const $contenedorTabla3 = document.getElementById("tabla3");
+
+
 fetch(URLApi)
   .then((response) => response.json())
-  .then(data => {
-    let events = data.events
+  .then((data) => {
+    let datos = data;
+    let events = data.events;
 
-    imprimirTablaHtml($contenedorTabla, events)
+    const pastEvents = events.filter((objeto) => datos.currentDate > objeto.date);
 
-    const pastEvents = events.filter(objeto => data.currentDate > objeto.date)
-    const UpcomingEvents = events.filter(objeto => data.currentDate < objeto.date)
-
- 
-    
-  })
-  .catch(error => {
-    console.log('error')
-  })
+    const upcomingEvents = events.filter((objeto) => datos.currentDate < objeto.date);
+    const catgoriaSinRepeticion = [...new Set(pastEvents.map(objeto => objeto.category))]
 
 
-  const $contenedorTabla = document.getElementById('tabla')
+    let mayor = mayorAsistencia(events);
+    let menor = menorAsistencia(events);
+    let capacidad = capacidadTabla1(events);
+    //  estructura Tabla 1
+    estructuraTabla1(mayor, menor, capacidad, $contenedorTabla1);
 
+    //  estructura Tabla 3
+    let arrysCategorias = catgoriaSinRepeticion.map(categoria => pastEvents.filter(event => event.category == categoria))
 
+    let arrysCategoriasUpcomming = catgoriaSinRepeticion.map(categoria => upcomingEvents.filter(event => event.category == categoria)).filter((elemento)=>elemento.length)
 
-function estructuraTabla(evento){
-    templeate =''
-    templeate += `
-    <table class="table ">
-        <thead>
-          <tr>
-            <th>Events Statistics</th>
-            <th>   </th>
-            <th>    </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Events with highest % of assistance</td>
-            <td>Events with lowest % of assistance</td>
-            <td>Events with lager capacity</td>
-          </tr>
-          <tr>
-            <td>   </td>
-            <td>   </td>
-            <td>   </td>
-          
-          </tr>
+    console.log(arrysCategorias)
+
+    function recorrerCategoria() {
+
+      let resultadoCategoriasReducida;
+      let aux = []
+      for (const array of arrysCategorias) {
+        let categoria = ''
+        let recaudacion = 0
+        let porcentaje = 0
+        resultadoCategoriasReducida = array.reduce((acumulador, elementoActual) => {
+          categoria = elementoActual.category
+          recaudacion += (elementoActual.price * elementoActual.assistance)
+          porcentaje += ((elementoActual.assistance * 100) / elementoActual.capacity)
+
+          acumulador = {
+            cat: categoria, rec: recaudacion, portj: porcentaje / array.length
+          }
+          return acumulador
+        }, {})
         
-        </tbody>
-      </table>
+        aux.push(resultadoCategoriasReducida)
+      }
+      return aux
+    }
+    
 
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Upcoming events statistics by category</th>
-            <th>   </th>
-            <th>    </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Categories</td>
-            <td>Revenues</td>
-            <td>Percentage of assitance</td>
-          </tr>
-          <tr>
-            <td>   </td>
-            <td>   </td>
-            <td>   </td>
-          </tr>
-          <tr>
-            <td>   </td>
-            <td>   </td>
-            <td>   </td>
-          </tr>
-        </tbody>
-      </table>
+    let resultadoTablaPastEvent = recorrerCategoria()
 
-
-      <table class="table ">
-        <thead>
-          <tr>
-            <th>Past events statistics by category</th>
-            <th>   </th>
-            <th>    </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Categories</td>
-            <td>Revenues</td>
-            <td>Percentage of assitance</td>
-          </tr>
-          <tr>
-            <td>   </td>
-            <td>    </td>
-            <td>    </td>
-          </tr>
-          <tr>
-            <td>   </td>
-            <td>   </td>
-            <td>   </td>
-          </tr>
-        </tbody>
-      </table>
-    `
-    return templeate
-}
-function imprimirTablaHtml(elementoHTML, evento){
-    elementoHTML.innerHTML = estructuraTabla(evento)
-
-}
-
-
-function mayorAsistencia(){
-    let filtro= pastEvents.filter()
-    // .map
     
 
 
-}
-function porcenjate(){
-        // ASISTENCIA/CAPACIDAD*100
+    estructuraTabla(resultadoTablaPastEvent, $contenedorTabla3)
 
+    // tabla 2
+
+    function recorrerCategoria2() {
+
+      let resultadoCategoriasReducida;
+      let aux = []
+      for (const array of arrysCategoriasUpcomming) {
+        let categoria = ''
+        let recaudacion = 0
+        let porcentaje = 0
+        resultadoCategoriasReducida = array.reduce((acumulador, elementoActual) => {
+          categoria = elementoActual.category
+          recaudacion += (elementoActual.price * elementoActual.estimate)
+          porcentaje += ((elementoActual.estimate * 100) / elementoActual.capacity)
+
+          acumulador = {
+            cat: categoria, rec: recaudacion, portj: porcentaje / array.length
+          }
+          return acumulador
+        }, {})
+        
+        aux.push(resultadoCategoriasReducida)
+      }
+      return aux
+    }
+    let resultadoTablaUpcomming = recorrerCategoria2()
+    console.log(resultadoTablaUpcomming)
+    estructuraTabla(resultadoTablaUpcomming, $contenedorTabla2)
+
+
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
+//  primer tabla
+
+function mayorAsistencia(array) {
+  let numeroMayor = array.sort((a, b) => a.assistance - b.assistance)[0];
+  return numeroMayor;
 }
+
+function menorAsistencia(array) {
+  let numeroMenor = array.sort((a, b) => b.assistance - a.assistance)[0];
+  return numeroMenor;
+}
+function capacidadTabla1(array) {
+  let capacidad = array.sort((a, b) => b.capacity - a.capacity)[0];
+
+  return capacidad;
+}
+
+function estructuraTabla1( numeroMayor, numeroMenor, capacidad,  elementoHTML) {
+  let template = `
+  <tr>
+  <td>${numeroMayor.name} ${((numeroMayor.assistance * 100) / numeroMayor.capacity).toFixed(2)}%</td>
+  <td>${numeroMenor.name} ${((numeroMenor.assistance * 100) / numeroMenor.capacity).toFixed(2)}%</td>
+  <td>${capacidad.name} ${capacidad.capacity} $</td>
+</tr>`;
+  elementoHTML.innerHTML = template;
+}
+
+
+
+// tabla para past y upcommin
+function estructuraTabla(array, elemento) {
+  let estructura = ''
+  array.forEach(categoria => {
+    console.log(categoria)
+    
+    let template = `
+    <tr>
+    <td>${categoria.cat}</td>
+    <td>${categoria.rec}</td>
+    <td>${categoria.portj}%</td>
+  </tr>
+    `;
+    estructura += template
+  });
+  elemento.innerHTML = estructura
+}
+
+
+
+
+
+
+
+
+

@@ -1,28 +1,32 @@
+const $contenedorDetails = document.getElementById('mainDetails')
+
+
 let URLApi = "https://mindhub-xj03.onrender.com/api/amazing"
 fetch(URLApi)
   .then((response) => response.json())
   .then(data => {
-
+    
+    let datos = data
     let evento = data.events
+    
 
-    const events = evento.find(objeto => objeto._id === valorKey)
-
+    
+    const locationSearch = location.search
+    const objURL = new URLSearchParams(locationSearch)
+    const valorKey = objURL.get('id')
+    const events = evento.find(objeto => objeto._id == valorKey)
+    
     imprimirCardDetails($contenedorDetails, events)
 
   })
   .catch(error => {
-    console.log('error')
+    console.log(error)
   })
   
-const locationSearch = location.search
-const objURL = new URLSearchParams(locationSearch)
-const valorKey = objURL.get('id')
-
-const $contenedorDetails = document.getElementById('mainDetails')
 
 
 function estructuraDetails(events) {
-    let template = ''
+    let template =""
     template = `<div class="card mb-3 p-3 " style="max-width: 85%; align-items-center">
     <div class="row g-0">
       <div class="col-md-4">
